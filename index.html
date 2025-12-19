@@ -5,32 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>iFortune</title>
     <style>
-        body { margin: 0; padding: 0; height: 100vh; background: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow: hidden; display: flex; align-items: flex-end; }
+        body { 
+            margin: 0; padding: 0; height: 100vh; background: #000; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
         
-        /* Fondo con desenfoque tipo iOS */
-        .wallpaper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1e3a8a, #9333ea); filter: blur(20px); transform: scale(1.1); z-index: 1; }
+        /* Fondo con degradado animado */
+        .wallpaper { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(135deg, #1e3a8a, #9333ea, #1e3a8a); 
+            background-size: 400% 400%; animation: gradient 15s ease infinite;
+            z-index: 1; 
+        }
+        @keyframes gradient { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
 
-        /* La tarjeta que sube como los AirPods */
+        /* Tarjeta tipo iOS flotante */
         .ios-card {
-            position: relative; z-index: 10; width: 100%; background: rgba(255, 255, 255, 0.92);
+            position: relative; z-index: 10; 
+            width: 90%; max-width: 350px;
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 30px 30px 0 0; padding: 20px; box-sizing: border-box;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
-            transform: translateY(100%); animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            text-align: center; color: #000; padding-bottom: 50px;
+            border-radius: 30px; padding: 25px; box-sizing: border-box;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: center; color: #000;
+            animation: popIn 0.6s cubic-bezier(0.17, 0.89, 0.32, 1.28);
         }
 
-        @keyframes slideUp { to { transform: translateY(0); } }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .handle { width: 40px; height: 5px; background: #ccc; border-radius: 10px; margin: 0 auto 20px; }
-        h1 { font-size: 22px; font-weight: 600; margin-bottom: 25px; letter-spacing: -0.5px; }
+        h1 { font-size: 20px; font-weight: 600; margin: 0 0 20px 0; letter-spacing: -0.5px; }
 
-        .canvas-container { position: relative; width: 280px; height: 280px; margin: 0 auto; }
+        .canvas-container { 
+            position: relative; width: 100%; aspect-ratio: 1/1; 
+            max-width: 260px; margin: 0 auto; 
+        }
         #canvas { border-radius: 50%; width: 100%; height: 100%; }
-        #pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 25px solid #007AFF; z-index: 15; }
+        #pointer { 
+            position: absolute; top: -5px; left: 50%; transform: translateX(-50%); 
+            width: 0; height: 0; border-left: 10px solid transparent; 
+            border-right: 10px solid transparent; border-top: 20px solid #007AFF; z-index: 15; 
+        }
 
-        button { margin-top: 30px; width: 80%; padding: 16px; font-size: 17px; font-weight: 600; border-radius: 15px; border: none; background: #007AFF; color: white; cursor: pointer; transition: 0.2s; }
-        button:active { background: #0056b3; transform: scale(0.98); }
+        button { 
+            margin-top: 25px; width: 100%; padding: 14px; 
+            font-size: 17px; font-weight: 600; border-radius: 12px; 
+            border: none; background: #007AFF; color: white; cursor: pointer; 
+            transition: transform 0.1s, background 0.2s;
+        }
+        button:active { background: #0056b3; transform: scale(0.96); }
     </style>
 </head>
 <body>
@@ -38,15 +61,14 @@
     <div class="wallpaper"></div>
 
     <div class="ios-card">
-        <div class="handle"></div>
-        <h1>Llavero Inteligente</h1>
+        <h1>🎡 Ruleta del Destino</h1>
         
         <div class="canvas-container">
             <div id="pointer"></div>
             <canvas id="canvas" width="300" height="300"></canvas>
         </div>
 
-        <button onclick="spin()">Girar Ruleta</button>
+        <button onclick="spin()">Girar ahora</button>
     </div>
 
     <script>
@@ -66,7 +88,7 @@
                 ctx.fill();
                 ctx.save();
                 ctx.fillStyle = "white";
-                ctx.font = "bold 15px -apple-system";
+                ctx.font = "bold 16px -apple-system";
                 ctx.translate(150 + Math.cos(angle + arc/2) * 100, 150 + Math.sin(angle + arc/2) * 100);
                 ctx.rotate(angle + arc/2 + Math.PI/2);
                 ctx.fillText(opt, -ctx.measureText(opt).width/2, 0);
@@ -75,16 +97,19 @@
         }
 
         function spin() {
-            const totalRotation = (360 * 10) + 245; // 245 grados asegura que la flecha superior caiga en BESO (rojo)
+            // Animación del botón
+            const btn = document.querySelector('button');
+            btn.disabled = true;
+            btn.style.opacity = "0.6";
+
+            // Cálculo para que caiga siempre en BESO (rojo)
+            // BESO es el índice 0. La flecha está arriba (270 grados).
+            const vueltas = 8;
+            const stopAngle = 270 - 30; // 30 es la mitad de 60 grados (360/6 opciones)
+            const totalRotation = (360 * vueltas) + stopAngle;
+            
             canvas.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
             canvas.style.transform = `rotate(${totalRotation}deg)`;
-            
-            // Haptic feedback simulado (vibración si el móvil lo permite)
-            if (window.navigator.vibrate) window.navigator.vibrate(50);
-
-            setTimeout(() => {
-                alert("Resultado: ¡BESO! 😘");
-            }, 4500);
         }
 
         draw();
