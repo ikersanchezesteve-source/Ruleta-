@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>iFortune</title>
+    <style>
+        body { margin: 0; padding: 0; height: 100vh; background: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow: hidden; display: flex; align-items: flex-end; }
+        
+        /* Fondo con desenfoque tipo iOS */
+        .wallpaper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1e3a8a, #9333ea); filter: blur(20px); transform: scale(1.1); z-index: 1; }
+
+        /* La tarjeta que sube como los AirPods */
+        .ios-card {
+            position: relative; z-index: 10; width: 100%; background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px 30px 0 0; padding: 20px; box-sizing: border-box;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
+            transform: translateY(100%); animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            text-align: center; color: #000; padding-bottom: 50px;
+        }
+
+        @keyframes slideUp { to { transform: translateY(0); } }
+
+        .handle { width: 40px; height: 5px; background: #ccc; border-radius: 10px; margin: 0 auto 20px; }
+        h1 { font-size: 22px; font-weight: 600; margin-bottom: 25px; letter-spacing: -0.5px; }
+
+        .canvas-container { position: relative; width: 280px; height: 280px; margin: 0 auto; }
+        #canvas { border-radius: 50%; width: 100%; height: 100%; }
+        #pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 25px solid #007AFF; z-index: 15; }
+
+        button { margin-top: 30px; width: 80%; padding: 16px; font-size: 17px; font-weight: 600; border-radius: 15px; border: none; background: #007AFF; color: white; cursor: pointer; transition: 0.2s; }
+        button:active { background: #0056b3; transform: scale(0.98); }
+    </style>
+</head>
+<body>
+
+    <div class="wallpaper"></div>
+
+    <div class="ios-card">
+        <div class="handle"></div>
+        <h1>Llavero Inteligente</h1>
+        
+        <div class="canvas-container">
+            <div id="pointer"></div>
+            <canvas id="canvas" width="300" height="300"></canvas>
+        </div>
+
+        <button onclick="spin()">Girar Ruleta</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const options = ["BESO", "INSTAGRAM", "ABRAZO", "CUBATA", "VOLTERETA", "RETO"];
+        const colors = ["#FF3B30", "#AF52DE", "#5856D6", "#FF9500", "#34C759", "#FFCC00"];
+        const arc = (2 * Math.PI) / options.length;
+
+        function draw() {
+            options.forEach((opt, i) => {
+                const angle = i * arc;
+                ctx.fillStyle = colors[i];
+                ctx.beginPath();
+                ctx.moveTo(150, 150);
+                ctx.arc(150, 150, 150, angle, angle + arc);
+                ctx.fill();
+                ctx.save();
+                ctx.fillStyle = "white";
+                ctx.font = "bold 15px -apple-system";
+                ctx.translate(150 + Math.cos(angle + arc/2) * 100, 150 + Math.sin(angle + arc/2) * 100);
+                ctx.rotate(angle + arc/2 + Math.PI/2);
+                ctx.fillText(opt, -ctx.measureText(opt).width/2, 0);
+                ctx.restore();
+            });
+        }
+
+        function spin() {
+            const totalRotation = (360 * 10) + 245; // 245 grados asegura que la flecha superior caiga en BESO (rojo)
+            canvas.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
+            canvas.style.transform = `rotate(${totalRotation}deg)`;
+            
+            // Haptic feedback simulado (vibración si el móvil lo permite)
+            if (window.navigator.vibrate) window.navigator.vibrate(50);
+
+            setTimeout(() => {
+                alert("Resultado: ¡BESO! 😘");
+            }, 4500);
+        }
+
+        draw();
+    </script>
+</body>
+</html>
