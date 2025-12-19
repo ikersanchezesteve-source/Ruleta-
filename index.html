@@ -3,79 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>iFortune</title>
+    <title>¡Ruleta Party!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
         body { 
-            margin: 0; padding: 0; height: 100vh; background: #000; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
+            margin: 0; padding: 0; height: 100vh; background: #ffeaa7; 
+            font-family: 'Fredoka One', cursive; overflow: hidden; 
+            display: flex; align-items: center; justify-content: center;
         }
         
-        /* Fondo con degradado animado */
-        .wallpaper { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(135deg, #1e3a8a, #9333ea, #1e3a8a); 
-            background-size: 400% 400%; animation: gradient 15s ease infinite;
-            z-index: 1; 
-        }
-        @keyframes gradient { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
-
-        /* Tarjeta tipo iOS flotante */
-        .ios-card {
-            position: relative; z-index: 10; 
-            width: 90%; max-width: 350px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 30px; padding: 25px; box-sizing: border-box;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            text-align: center; color: #000;
-            animation: popIn 0.6s cubic-bezier(0.17, 0.89, 0.32, 1.28);
+        .fun-card {
+            position: relative; z-index: 10; width: 90%; max-width: 380px;
+            background: linear-gradient(145deg, #ff7e5f, #feb47b);
+            border-radius: 30px; padding: 30px 20px; box-sizing: border-box;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2); text-align: center; color: white;
+            border: 5px solid #fff; animation: bounceIn 0.8s ease-out;
         }
 
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); }
+        }
 
-        h1 { font-size: 20px; font-weight: 600; margin: 0 0 20px 0; letter-spacing: -0.5px; }
+        h1 { font-size: 26px; margin: 0 0 20px 0; text-shadow: 2px 2px #d35400; }
 
         .canvas-container { 
             position: relative; width: 100%; aspect-ratio: 1/1; 
-            max-width: 260px; margin: 0 auto; 
+            max-width: 260px; margin: 0 auto; border: 5px solid #fff; border-radius: 50%;
         }
-        #canvas { border-radius: 50%; width: 100%; height: 100%; }
+        #canvas { border-radius: 50%; width: 100%; height: 100%; background: #eee; }
+        
         #pointer { 
-            position: absolute; top: -5px; left: 50%; transform: translateX(-50%); 
-            width: 0; height: 0; border-left: 10px solid transparent; 
-            border-right: 10px solid transparent; border-top: 20px solid #007AFF; z-index: 15; 
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%); 
+            width: 0; height: 0; border-left: 15px solid transparent; 
+            border-right: 15px solid transparent; border-top: 30px solid #f9ca24;
+            z-index: 15; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
         }
 
         button { 
-            margin-top: 25px; width: 100%; padding: 14px; 
-            font-size: 17px; font-weight: 600; border-radius: 12px; 
-            border: none; background: #007AFF; color: white; cursor: pointer; 
-            transition: transform 0.1s, background 0.2s;
+            margin-top: 25px; width: 90%; padding: 16px; font-family: 'Fredoka One', cursive;
+            font-size: 20px; border-radius: 30px; border: none; 
+            background: #e84393; color: white; cursor: pointer; 
+            box-shadow: 0 5px 15px rgba(224, 73, 137, 0.4); transition: 0.2s;
         }
-        button:active { background: #0056b3; transform: scale(0.96); }
+        button:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
-    <div class="wallpaper"></div>
-
-    <div class="ios-card">
-        <h1>🎡 Ruleta del Destino</h1>
-        
+    <div class="fun-card">
+        <h1>🥳 ¿QUÉ TE TOCA? 🎉</h1>
         <div class="canvas-container">
             <div id="pointer"></div>
             <canvas id="canvas" width="300" height="300"></canvas>
         </div>
-
-        <button onclick="spin()">Girar ahora</button>
+        <button onclick="spin()">¡GIRAR! 🤩</button>
     </div>
 
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const options = ["BESO", "INSTAGRAM", "ABRAZO", "CUBATA", "VOLTERETA", "RETO"];
-        const colors = ["#FF3B30", "#AF52DE", "#5856D6", "#FF9500", "#34C759", "#FFCC00"];
+        const colors = ["#eb4d4b", "#f0932b", "#fed330", "#26de81", "#2d98da", "#8e44ad"]; 
         const arc = (2 * Math.PI) / options.length;
 
         function draw() {
@@ -88,31 +78,32 @@
                 ctx.fill();
                 ctx.save();
                 ctx.fillStyle = "white";
-                ctx.font = "bold 16px -apple-system";
+                ctx.font = "bold 18px Arial"; 
                 ctx.translate(150 + Math.cos(angle + arc/2) * 100, 150 + Math.sin(angle + arc/2) * 100);
-                ctx.rotate(angle + arc/2 + Math.PI/2);
+                ctx.rotate(angle + arc/2 + Math.PI / 2);
                 ctx.fillText(opt, -ctx.measureText(opt).width/2, 0);
                 ctx.restore();
             });
         }
 
         function spin() {
-            // Animación del botón
             const btn = document.querySelector('button');
             btn.disabled = true;
-            btn.style.opacity = "0.6";
+            btn.style.opacity = "0.5";
 
-            // Cálculo para que caiga siempre en BESO (rojo)
-            // BESO es el índice 0. La flecha está arriba (270 grados).
-            const vueltas = 8;
-            const stopAngle = 270 - 30; // 30 es la mitad de 60 grados (360/6 opciones)
+            // Cálculo exacto para BESO (Opción 0, Color Rojo)
+            const vueltas = 10; 
+            const stopAngle = 270 - 30; 
             const totalRotation = (360 * vueltas) + stopAngle;
             
-            canvas.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
+            canvas.style.transition = "transform 5s cubic-bezier(0.15, 0, 0.15, 1)";
             canvas.style.transform = `rotate(${totalRotation}deg)`;
+            
+            // He quitado el alert para que sea más limpio
         }
 
         draw();
     </script>
 </body>
 </html>
+
